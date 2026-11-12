@@ -5,302 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>台幣拆錢小工具</title>
 <style>
-  :root{
-    --bg:#fffaf2;
-    --card:#ffffff;
-    --ink:#2d3748;
-    --muted:#6b7280;
-    --accent:#ff9f43;
-    --accent2:#4dabf7;
-    --border:#eadfce;
-  }
+  :root{--bg:#fffaf2;--card:#ffffff;--ink:#2d3748;--muted:#6b7280;--accent:#ff9f43;--accent2:#4dabf7;--border:#eadfce}
   *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-    background:linear-gradient(180deg,#fff7e8 0%,#f7fbff 100%);
-    color:var(--ink);
-    min-height:100vh;
-  }
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:linear-gradient(180deg,#fff7e8 0%,#f7fbff 100%);color:var(--ink);min-height:100vh}
   .wrap{max-width:980px;margin:auto;padding:24px 16px 48px}
-  h1{
-    margin:6px 0 4px;
-    text-align:center;
-    font-size:clamp(28px,5vw,46px);
-    letter-spacing:.04em;
-  }
-  .sub{
-    text-align:center;
-    color:var(--muted);
-    margin-bottom:22px;
-    font-size:16px;
-  }
-  .panel{
-    background:rgba(255,255,255,.92);
-    border:2px solid var(--border);
-    border-radius:24px;
-    padding:18px;
-    box-shadow:0 10px 30px rgba(60,45,25,.08);
-  }
-  .entry{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:12px;
-    align-items:center;
-  }
-  .inputbox{
-    display:flex;
-    align-items:center;
-    background:#fff;
-    border:3px solid #ffd59b;
-    border-radius:18px;
-    overflow:hidden;
-  }
-  .currency{
-    font-weight:900;
-    padding-left:16px;
-    font-size:28px;
-    color:#7c5c2e;
-  }
-  input{
-    min-width:0;
-    width:100%;
-    border:0;
-    outline:0;
-    padding:15px 16px 15px 8px;
-    font-size:32px;
-    font-weight:900;
-    background:transparent;
-    color:#1f2937;
-  }
-  button{
-    border:0;
-    border-radius:16px;
-    padding:16px 22px;
-    font-size:20px;
-    font-weight:900;
-    cursor:pointer;
-    background:var(--accent);
-    color:#fff;
-    box-shadow:0 5px 0 #dc7f28;
-    transition:.1s ease;
-  }
+  h1{margin:6px 0 4px;text-align:center;font-size:clamp(28px,5vw,46px);letter-spacing:.04em}
+  .sub{text-align:center;color:var(--muted);margin-bottom:22px;font-size:16px}
+  .panel{background:rgba(255,255,255,.92);border:2px solid var(--border);border-radius:24px;padding:18px;box-shadow:0 10px 30px rgba(60,45,25,.08)}
+  .entry{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+  .inputbox{display:flex;align-items:center;background:#fff;border:3px solid #ffd59b;border-radius:18px;overflow:hidden}
+  .currency{font-weight:900;padding-left:16px;font-size:28px;color:#7c5c2e}
+  input{min-width:0;width:100%;border:0;outline:0;padding:15px 16px 15px 8px;font-size:32px;font-weight:900;background:transparent;color:#1f2937}
+  button{border:0;border-radius:16px;padding:16px 22px;font-size:20px;font-weight:900;cursor:pointer;background:var(--accent);color:#fff;box-shadow:0 5px 0 #dc7f28;transition:.1s ease}
   button:active{transform:translateY(3px);box-shadow:0 2px 0 #dc7f28}
-  .quick{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .quick button{
-    background:#fff;
-    color:#5b6470;
-    box-shadow:none;
-    border:2px solid #dfe7ef;
-    font-size:16px;
-    padding:9px 14px;
-  }
-  .answer{
-    margin-top:20px;
-    display:none;
-  }
-  .summary{
-    text-align:center;
-    background:#eef8ff;
-    border:2px solid #cbe9ff;
-    border-radius:18px;
-    padding:14px;
-    font-size:21px;
-    font-weight:800;
-    margin-bottom:16px;
-  }
-  .money-grid{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    align-items:flex-end;
-    gap:16px;
-  }
-  .money-piece{
-    border-radius:18px;
-    padding:12px 10px 10px;
-    background:#fff;
-    border:2px solid #edf0f3;
-    text-align:center;
-    min-width:145px;
-    min-height:135px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-  }
-  .coin{
-    width:88px;height:88px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    border:6px double rgba(255,255,255,.72);
-    box-shadow:inset 0 0 0 2px rgba(0,0,0,.12),0 6px 12px rgba(0,0,0,.10);
-    font-weight:900;
-    color:#3d4650;
-    text-shadow:0 1px 0 rgba(255,255,255,.8);
-    position:relative;
-  }
-  .coin::after{
-    content:"";
-    position:absolute; inset:8px;
-    border:1px dashed rgba(50,50,50,.28);
-    border-radius:50%;
-  }
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .quick button{background:#fff;color:#5b6470;box-shadow:none;border:2px solid #dfe7ef;font-size:16px;padding:9px 14px}
+  .answer{margin-top:20px;display:none}
+  .summary{text-align:center;background:#eef8ff;border:2px solid #cbe9ff;border-radius:18px;padding:14px;font-size:21px;font-weight:800;margin-bottom:16px}
+  .money-grid{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:16px}
+  .money-piece{border-radius:18px;padding:12px 10px 10px;background:#fff;border:2px solid #edf0f3;text-align:center;min-width:145px;min-height:135px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .coin{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:6px double rgba(255,255,255,.72);box-shadow:inset 0 0 0 2px rgba(0,0,0,.12),0 6px 12px rgba(0,0,0,.10);font-weight:900;color:#3d4650;text-shadow:0 1px 0 rgba(255,255,255,.8);position:relative}
+  .coin::after{content:"";position:absolute;inset:8px;border:1px dashed rgba(50,50,50,.28);border-radius:50%}
   .coin span{position:relative;z-index:1;font-size:25px}
   .c50{background:linear-gradient(135deg,#f5d96b,#d6a82d,#fff2a5)}
   .c10,.c5{background:linear-gradient(135deg,#f7f7f7,#b8bec5,#eceff2)}
-  .c1{background:linear-gradient(135deg,#d49a62,#a86532,#e2b07a,#8c5228); color:#3b2416}
-  .c5{width:80px;height:80px}
-  .c1{width:72px;height:72px}
-  .bill{
-    width:128px;height:66px;border-radius:8px;
-    border:3px solid rgba(40,40,40,.28);
-    box-shadow:0 6px 12px rgba(0,0,0,.10);
-    position:relative;
-    overflow:hidden;
-    display:flex;align-items:center;justify-content:center;
-    font-weight:950;
-  }
-  .bill::before{
-    content:"";
-    position:absolute;inset:5px;
-    border:2px solid rgba(255,255,255,.45);
-    border-radius:5px;
-  }
+  .c1{background:linear-gradient(135deg,#d49a62,#a86532,#e2b07a,#8c5228);color:#3b2416}
+  .c5{width:80px;height:80px}.c1{width:72px;height:72px}
+  .bill{width:128px;height:66px;border-radius:8px;border:3px solid rgba(40,40,40,.28);box-shadow:0 6px 12px rgba(0,0,0,.10);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:950}
+  .bill::before{content:"";position:absolute;inset:5px;border:2px solid rgba(255,255,255,.45);border-radius:5px}
   .bill .num{font-size:27px;z-index:1}
-  .bill .nt{
-    position:absolute;left:8px;top:5px;font-size:10px;opacity:.65;z-index:1
-  }
+  .bill .nt{position:absolute;left:8px;top:5px;font-size:10px;opacity:.65;z-index:1}
   .b1000{background:linear-gradient(135deg,#86c8f5,#dff2ff,#5aaee7)}
   .b500{background:linear-gradient(135deg,#b88be3,#eadcfa,#9a6bc9)}
   .b100{background:linear-gradient(135deg,#f0a0a0,#ffe3e3,#de7777)}
   .label{margin-top:7px;font-size:13px;color:var(--muted);font-weight:700}
-  .zero{
-    text-align:center;color:var(--muted);
-    padding:24px 0 8px;font-size:18px
-  }
-  .footer{
-    text-align:center;color:#7b8794;font-size:13px;margin-top:18px;line-height:1.6
-  }
-  @media (max-width:600px){
-    .entry{grid-template-columns:1fr}
-    button.main{width:100%}
-  }
+  .zero{text-align:center;color:var(--muted);padding:24px 0 8px;font-size:18px}
+  .footer{text-align:center;color:#7b8794;font-size:13px;margin-top:18px;line-height:1.6}
+  @media (max-width:600px){.entry{grid-template-columns:1fr}button.main{width:100%}}
+  /* Only added control: one-tap erase. Original money display styling unchanged. */
+  .erase{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:58px;min-height:58px;margin-right:5px;padding:9px;background:#fff;color:#566171;border:2px solid #dfe7ef;border-radius:13px;box-shadow:none;touch-action:manipulation}
+  .erase:active{box-shadow:none}
+  .erase svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>💰 台幣拆錢小工具</h1>
   <div class="sub">輸入金額，看看可以用哪些新台幣來付錢！</div>
-
   <div class="panel">
     <div class="entry">
       <div class="inputbox">
         <div class="currency">$</div>
-        <input id="amount" type="number" inputmode="numeric" min="0" max="99999" step="1"
-               placeholder="例如：12" aria-label="輸入金額">
+        <input id="amount" type="number" inputmode="numeric" min="0" max="99999" step="1" aria-label="輸入金額">
+        <button class="erase" type="button" onclick="clearAll()" aria-label="橡皮擦：清除全部金額與拆錢結果" title="全部清除">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20 20-7.5-7.5" opacity="0"/><path d="M20.4 13.3 13.3 20.4a2 2 0 0 1-1.4.6H6.5a2 2 0 0 1-1.4-.6l-2.5-2.5a2 2 0 0 1 0-2.8L13.9 3.8a2 2 0 0 1 2.8 0l3.7 3.7a2 2 0 0 1 0 2.8Z"/><path d="m8.5 9.2 6.3 6.3M12 21h9"/></svg>
+        </button>
       </div>
       <button class="main" onclick="breakMoney()">拆錢</button>
     </div>
-
     <div class="quick">
-      <button onclick="setAmount(12)">$12</button>
-      <button onclick="setAmount(38)">$38</button>
-      <button onclick="setAmount(67)">$67</button>
-      <button onclick="setAmount(125)">$125</button>
-      <button onclick="setAmount(588)">$588</button>
-      <button onclick="setAmount(1688)">$1688</button>
+      <button onclick="setAmount(12)">$12</button><button onclick="setAmount(38)">$38</button><button onclick="setAmount(67)">$67</button><button onclick="setAmount(125)">$125</button><button onclick="setAmount(588)">$588</button><button onclick="setAmount(1688)">$1688</button>
     </div>
-
     <div id="answer" class="answer">
       <div id="summary" class="summary"></div>
       <div id="moneyGrid" class="money-grid"></div>
     </div>
   </div>
-
-  <div class="footer">
-    教學用途：圖案以幣值、大小與常見色系協助辨識，並非可用於支付的貨幣影像。<br>
-    拆法採「最少張／枚數」：1000 → 500 → 100 → 50 → 10 → 5 → 1。
-  </div>
+  <div class="footer">教學用途：圖案以幣值、大小與常見色系協助辨識，並非可用於支付的貨幣影像。<br>拆法採「最少張／枚數」：1000 → 500 → 100 → 50 → 10 → 5 → 1。</div>
 </div>
-
 <script>
-const denoms = [
-  {v:1000, type:"bill", cls:"b1000", name:"1000 元鈔票"},
-  {v:500,  type:"bill", cls:"b500",  name:"500 元鈔票"},
-  {v:100,  type:"bill", cls:"b100",  name:"100 元鈔票"},
-  {v:50,   type:"coin", cls:"c50",   name:"50 元硬幣"},
-  {v:10,   type:"coin", cls:"c10",   name:"10 元硬幣"},
-  {v:5,    type:"coin", cls:"c5",    name:"5 元硬幣"},
-  {v:1,    type:"coin", cls:"c1",    name:"1 元硬幣"}
+const denoms=[
+ {v:1000,type:"bill",cls:"b1000",name:"1000 元鈔票"},
+ {v:500,type:"bill",cls:"b500",name:"500 元鈔票"},
+ {v:100,type:"bill",cls:"b100",name:"100 元鈔票"},
+ {v:50,type:"coin",cls:"c50",name:"50 元硬幣"},
+ {v:10,type:"coin",cls:"c10",name:"10 元硬幣"},
+ {v:5,type:"coin",cls:"c5",name:"5 元硬幣"},
+ {v:1,type:"coin",cls:"c1",name:"1 元硬幣"}
 ];
-
 function moneyPicture(d){
-  if(d.type === "bill"){
-    return `<div class="bill ${d.cls}">
-      <div class="nt">新臺幣</div><div class="num">${d.v}</div>
-    </div>`;
-  }
-  return `<div class="coin ${d.cls}"><span>${d.v}</span></div>`;
+ if(d.type==="bill")return `<div class="bill ${d.cls}"><div class="nt">新臺幣</div><div class="num">${d.v}</div></div>`;
+ return `<div class="coin ${d.cls}"><span>${d.v}</span></div>`;
 }
-
 function breakMoney(){
-  const input = document.getElementById("amount");
-  let amount = Math.floor(Number(input.value));
-
-  if(!Number.isFinite(amount) || amount < 0){
-    input.value = "";
-    input.focus();
-    return;
-  }
-  if(amount > 99999){
-    amount = 99999;
-    input.value = amount;
-  }
-
-  let rest = amount;
-  let totalPieces = 0;
-  let cards = "";
-
-  denoms.forEach(d => {
-    const count = Math.floor(rest / d.v);
-    rest %= d.v;
-    if(count > 0){
-      totalPieces += count;
-      for(let i = 0; i < count; i++){
-        cards += `
-          <div class="money-piece">
-            ${moneyPicture(d)}
-            <div class="label">${d.name}</div>
-          </div>`;
-      }
-    }
-  });
-
-  const answer = document.getElementById("answer");
-  const summary = document.getElementById("summary");
-  const grid = document.getElementById("moneyGrid");
-
-  summary.textContent = amount === 0
-    ? "0 元，不需要拿錢喔！"
-    : `${amount} 元，可以用 ${totalPieces} 張／個錢幣完成。`;
-
-  grid.innerHTML = cards || `<div class="zero">沒有需要顯示的錢幣。</div>`;
-  answer.style.display = "block";
+ const input=document.getElementById("amount");
+ // An empty input is not zero: it should remain blank after erasing.
+ if(input.value.trim()===""){clearResults();return;}
+ let amount=Math.floor(Number(input.value));
+ if(!Number.isFinite(amount)||amount<0){input.value="";clearResults();input.focus();return;}
+ if(amount>99999){amount=99999;input.value=amount;}
+ let rest=amount,totalPieces=0,cards="";
+ denoms.forEach(d=>{
+  const count=Math.floor(rest/d.v);rest%=d.v;
+  if(count>0){totalPieces+=count;for(let i=0;i<count;i++){
+   cards+=`<div class="money-piece">${moneyPicture(d)}<div class="label">${d.name}</div></div>`;
+  }}
+ });
+ const answer=document.getElementById("answer"),summary=document.getElementById("summary"),grid=document.getElementById("moneyGrid");
+ summary.textContent=amount===0?"0 元，不需要拿錢喔！":`${amount} 元，可以用 ${totalPieces} 張／個錢幣完成。`;
+ grid.innerHTML=cards||`<div class="zero">沒有需要顯示的錢幣。</div>`;
+ answer.style.display="block";
 }
-
-function setAmount(n){
-  document.getElementById("amount").value = n;
-  breakMoney();
+function setAmount(n){document.getElementById("amount").value=n;breakMoney();}
+function clearResults(){
+ document.getElementById("answer").style.display="none";
+ document.getElementById("summary").textContent="";
+ document.getElementById("moneyGrid").innerHTML="";
 }
-
-document.getElementById("amount").addEventListener("keydown", e => {
-  if(e.key === "Enter") breakMoney();
-});
+function clearAll(){document.getElementById("amount").value="";clearResults();}
+document.getElementById("amount").addEventListener("keydown",e=>{if(e.key==="Enter")breakMoney();});
 </script>
 </body>
 </html>
